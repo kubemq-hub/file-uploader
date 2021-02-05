@@ -1,10 +1,11 @@
-package server
+package api
 
 import (
 	"context"
 	"fmt"
 	"github.com/kubemq-io/file-uploader/config"
 	"github.com/kubemq-io/file-uploader/pkg/logger"
+	"github.com/kubemq-io/file-uploader/source"
 	"github.com/kubemq-io/infra-services-usage/pkg/api"
 
 	"github.com/labstack/echo/v4"
@@ -16,13 +17,15 @@ type Server struct {
 	echoWebServer *echo.Echo
 	cfg           *config.Config
 	logger        *logger.Logger
+	sourceService *source.Service
 }
 
-func Start(ctx context.Context, cfg *config.Config) (*Server, error) {
+func Start(ctx context.Context, cfg *config.Config, sourceService *source.Service) (*Server, error) {
 	s := &Server{
 		cfg:           cfg,
 		echoWebServer: echo.New(),
 		logger:        logger.NewLogger("file-uploader-api"),
+		sourceService: sourceService,
 	}
 	s.echoWebServer.Use(middleware.Recover())
 	s.echoWebServer.Use(s.loggingMiddleware())
@@ -34,6 +37,9 @@ func Start(ctx context.Context, cfg *config.Config) (*Server, error) {
 	})
 	s.echoWebServer.GET("/ready", func(c echo.Context) error {
 		return c.String(200, "ready")
+	})
+	s.echoWebServer.GET("/status", func(c echo.Context) error {
+		return c.JSONPretty(200, s.sourceService.Status(), "\t")
 	})
 	errCh := make(chan error, 1)
 	go func() {

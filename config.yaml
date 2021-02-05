@@ -1,10 +1,11 @@
 apiPort: 12000
 logLevel: info
 source:
-  syncPath: "/"
-  include: {}
-  ignore: {}
-  pollIntervalSeconds: 61
+  root: "./root"
+  concurrentSenders: 20
+  pollIntervalSeconds: 1
+  bucketType: "minio"
+  bucketName: "bucket"
 target:
   address: "localhost:50000"
   queue: q1
