@@ -1,0 +1,12 @@
+apiPort: 12000
+logLevel: info
+source:
+  syncPath: "/"
+  include: {}
+  ignore: {}
+  pollIntervalSeconds: 61
+target:
+  address: "localhost:50000"
+  queue: q1
+  clientId: ""
+  authToken: ""
