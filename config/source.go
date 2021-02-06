@@ -31,7 +31,7 @@ func (s *Source) Validate() error {
 		return fmt.Errorf("poll intreval must be > 0 secnods")
 	}
 	switch s.BucketType {
-	case "aws", "gcp", "minio":
+	case "aws", "gcp", "minio", "filesystem":
 	default:
 		return fmt.Errorf("invalid bucket type")
 	}

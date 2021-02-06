@@ -4,10 +4,10 @@ source:
   root: "./root"
   concurrentSenders: 20
   pollIntervalSeconds: 1
-  bucketType: "minio"
+  bucketType: "filesystem"
   bucketName: "bucket"
 target:
   address: "localhost:50000"
-  queue: q1
+  queue: queue.fs
   clientId: ""
   authToken: ""

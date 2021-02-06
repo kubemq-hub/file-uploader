@@ -19,7 +19,7 @@ import (
 var log = logger.NewLogger("file-uploader")
 var (
 	generate = pflag.BoolP("generate", "g", false, "set generate files before start")
-	size     = pflag.IntP("size", "s", 1000000, "set file size")
+	size     = pflag.IntP("size", "s", 10000000, "set file size")
 	items    = pflag.IntP("items", "i", 10, "set how many items to generate")
 )
 
@@ -36,14 +36,17 @@ func run() error {
 		return err
 	}
 	if *generate {
-		g := &file_creator.GeneratorRequest{
-			Dir:   cfg.Source.Root,
-			Size:  *size,
-			Items: *items,
-		}
-		if err := g.Do(); err != nil {
-			return err
-		}
+		go func() {
+			g := &file_creator.GeneratorRequest{
+				Dir:   cfg.Source.Root,
+				Size:  *size,
+				Items: *items,
+			}
+			if err := g.Do(); err != nil {
+				panic(err)
+			}
+		}()
+
 	}
 
 	var senders []types.Sender
